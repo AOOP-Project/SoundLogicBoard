@@ -38,6 +38,10 @@ public class ClockPrefab extends ObjectPrefab
         ConnectorComponent cc = new ConnectorComponent(instance,texture,textureRef,activeTexture,activeTextureRef);
         instance.addComponent(cc);
         instance.addComponent(new ClockComponent(instance,cc,frequency ));
+        cc.setIOAccess(ConnectorComponent.SEND,ConnectorComponent.NORTH);
+        cc.setIOAccess(ConnectorComponent.SEND,ConnectorComponent.SOUTH);
+        cc.setIOAccess(ConnectorComponent.SEND,ConnectorComponent.EAST);
+        cc.setIOAccess(ConnectorComponent.SEND,ConnectorComponent.WEST);
         instance.setCreator(this);
         return instance;
     }

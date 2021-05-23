@@ -1,17 +1,19 @@
 package evhh;
 
 import evhh.common.imagemanipulation.ImageTiler;
+import evhh.components.BoolLogicComponent;
 import evhh.controller.InputManager.UserInputManager;
 import evhh.model.EventTrigger;
 import evhh.model.GameInstance;
 import evhh.model.Grid;
 import evhh.model.ObjectPrefab;
-import evhh.model.gamecomponents.AudioComponent;
 import evhh.model.mapeditor.MapEditor;
-import evhh.model.prefabs.WallPrefab;
 import evhh.prefabs.CablePrefab;
 import evhh.prefabs.ClockPrefab;
+import evhh.prefabs.logiccomponentsprefabs.AndGatePrefab;
+import evhh.prefabs.logiccomponentsprefabs.BoolLogicGatePrefab;
 import evhh.prefabs.logiccomponentsprefabs.NotGatePrefab;
+import evhh.prefabs.logiccomponentsprefabs.OrGatePrefab;
 import evhh.view.audio.AudioListener;
 import evhh.view.renderers.FrameRenderer;
 import evhh.view.renderers.GameFrame;
@@ -53,10 +55,15 @@ public class Main
     private static EventTrigger levelSwitchingEvent;
     private static boolean runWithMapEditor;
 
-    private static CablePrefab cablePrefab;
+    private static CablePrefab fourWayCablePrefab;
+    private static CablePrefab horizontalCablePrefab;
+    private static CablePrefab verticalCablePrefab;
     private static ClockPrefab clockPrefab;
     private static ClockPrefab clockPrefab2;
-    private static NotGatePrefab NotPrefab2;
+    private static NotGatePrefab notPrefab;
+    private static AndGatePrefab andPrefab;
+    private static OrGatePrefab orPrefab;
+    private static BoolLogicGatePrefab xorPrefab;
 
     public static void main(String[] args)
     {
@@ -124,11 +131,21 @@ public class Main
     }
     private static void buildScene()
     {
-        cablePrefab = new CablePrefab(game1.getTexture("CableInactive"),
+        fourWayCablePrefab = new CablePrefab(game1.getTexture("CableInactive"),
                 "CableInactive",
                 game1.getTexture("CableActive"),
                 "CableActive",
-                110);
+                110,CablePrefab.FOUR_WAY);
+        verticalCablePrefab = new CablePrefab(game1.getTexture("VertCableInactive"),
+                "VertCableInactive",
+                game1.getTexture("VertCableActive"),
+                "VertCableActive",
+                110,CablePrefab.VERTICAL);
+        horizontalCablePrefab = new CablePrefab(game1.getTexture("HorCableInactive"),
+                "HorCableInactive",
+                game1.getTexture("HorCableActive"),
+                "HorCableActive",
+                110,CablePrefab.HORIZONTAL);
         clockPrefab = new ClockPrefab(game1.getTexture("ClockInactive"),
                 "ClockInactive",
                 game1.getTexture("ClockActive"),
@@ -139,13 +156,38 @@ public class Main
                 game1.getTexture("ClockActive"),
                 "ClockActive",
                 120,4);
-        NotPrefab2 = new NotGatePrefab(game1.getTexture("NotInactive"),
+        notPrefab = new NotGatePrefab(game1.getTexture("NotInactive"),
                 "NotInactive",
                 game1.getTexture("NotActive"),
                 "NotActive",
                 120);
+        andPrefab = new AndGatePrefab(game1.getTexture("AndInactive"),
+                "AndInactive",
+                game1.getTexture("AndActive"),
+                "AndActive",
+                120);
+        orPrefab = new OrGatePrefab(game1.getTexture("OrInactive"),
+                "OrInactive",
+                game1.getTexture("OrActive"),
+                "OrActive",
+                120);
+        xorPrefab = new BoolLogicGatePrefab(game1.getTexture("XorInactive"),
+                "XorInactive",
+                game1.getTexture("XorActive"),
+                "XorActive",
+                120,BoolLogicComponent.XOR);
 
 
-        mapEditor = new MapEditor(grid,DEFAULT_CELL_SIZE,new ObjectPrefab[]{cablePrefab,clockPrefab,clockPrefab2,NotPrefab2});
+        mapEditor = new MapEditor(grid,DEFAULT_CELL_SIZE,new ObjectPrefab[]{
+                fourWayCablePrefab,
+                verticalCablePrefab,
+                horizontalCablePrefab,
+                clockPrefab,
+                clockPrefab2,
+                notPrefab,
+                andPrefab,
+                orPrefab,
+                xorPrefab
+        });
     }
 }

@@ -107,7 +107,8 @@ public class ConnectorComponent extends GameComponent implements Connectable
     {
         if(logicComponent!=null)
         {
-            signal = logicComponent.onTransmit(signal,packetId,source);
+            logicComponent.onTransmit(signal,packetId,source);
+            return;
         }
         if (lastPacketId == packetId)
             return;
@@ -116,21 +117,25 @@ public class ConnectorComponent extends GameComponent implements Connectable
         else if (signal == 0 && this.signal != 0)
             parent.getSprite().switchImage(inactiveTexture, inactiveTextureRef);
         this.signal = signal;
+        lastPacketId = packetId;
         for (int i = 0; i < connections.length; i++)
             if (connections[i] != null && source != connections[i])
                 if (ioAccess[i] == ConnectorComponent.SEND || ioAccess[i] == ConnectorComponent.SEND_RECEIVE)
                     if (connections[i].getIOAccess(i) == ConnectorComponent.SEND_RECEIVE || connections[i].getIOAccess(i) == ConnectorComponent.RECEIVE)
+                    {
+                        //System.out.println(i + ", " + signal + ", " + packetId);
                         connections[i].transmit(signal, packetId, this);
+                    }
     }
 
-    private void setIOAccess(int access, int connection)
+    public void setIOAccess(int access, int connection)
     {
         assert (ioAccess.length >= connection && 0 < connection);
         assert access <= BLOCKED && access >= 0;
         ioAccess[connection] = access;
     }
 
-    private int getIOAccess(int connection)
+    public int getIOAccess(int connection)
     {
         assert (ioAccess.length >= connection && 0 < connection);
         return ioAccess[connection];
@@ -149,5 +154,34 @@ public class ConnectorComponent extends GameComponent implements Connectable
     public void setLogicComponent(BoolLogicComponent logicComponent)
     {
         this.logicComponent = logicComponent;
+    }
+    public ConnectorComponent getConnected(int connection)
+    {
+        assert (connections.length >= connection && 0 < connection);
+        return connections[connection];
+    }
+    public int getConnection(ConnectorComponent connector)
+    {
+        for (int i = 0; i <connections.length ; i++)
+        {
+            if(connections[i]==connector)
+                return i;
+        }
+        return -1;
+    }
+    public void setSignal(int signal)
+    {
+        if(signal == -1)
+            return;
+        this.signal = signal;
+    }
+
+    public void setLastPacketId(long lastPacketId)
+    {
+        this.lastPacketId = lastPacketId;
+    }
+    public boolean isActive()
+    {
+        return signal!=0;
     }
 }
