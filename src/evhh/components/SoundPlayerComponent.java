@@ -5,6 +5,8 @@ import evhh.model.GameObject;
 import evhh.model.gamecomponents.AudioComponent;
 import evhh.view.audio.AudioListener;
 
+import javax.sound.sampled.FloatControl;
+
 /***********************************************************************************************************************
  * @project: AOOP_Sound_Board
  * @package: evhh.components
@@ -19,6 +21,7 @@ public class SoundPlayerComponent extends GameComponent
     private AudioComponent ac;
     private ConnectorComponent connector;
     private int selected = 0;
+    private boolean played = false;
 
     public SoundPlayerComponent(GameObject parent, AudioListener listener, AudioComponent ac, ConnectorComponent connector)
     {
@@ -37,16 +40,33 @@ public class SoundPlayerComponent extends GameComponent
     @Override
     public void update()
     {
-        if(!ac.isPlaying()&&connector.isActive())
+        if(!ac.isPlaying()&&connector.isActive()&&!played)
+        {
             ac.play(selected);
-        //if(ac.isPlaying()&&!connector.isActive())
-          //  ac.stop();
+            played = true;
+        }
+        if(!connector.isActive())
+          played = false;
 
     }
 
     @Override
     public void onExit()
     {
+        ac.stop();
 
+    }
+
+    public AudioComponent getAudioComponent()
+    {
+        return ac;
+    }
+    public float getVolume()
+    {
+        return ac.getVolume();
+    }
+    public void setVolume(float gain)
+    {
+        ac.setVolume(gain);
     }
 }

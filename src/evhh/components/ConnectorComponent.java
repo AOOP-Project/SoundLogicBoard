@@ -36,6 +36,8 @@ public class ConnectorComponent extends GameComponent implements Connectable
     private BoolLogicComponent logicComponent;
 
     private int signal = 0;
+    private boolean active = true;
+
 
     public ConnectorComponent(GameObject parent, BufferedImage inactiveTexture, String inactiveTextureRef, BufferedImage activeTexture, String activeTextureRef)
     {
@@ -81,7 +83,14 @@ public class ConnectorComponent extends GameComponent implements Connectable
     @Override
     public void onExit()
     {
-
+        for (ConnectorComponent connection : connections)
+        {
+            if(connections==null)
+                continue;
+            connection.removeConnection(this);
+            connections = null;
+            active = false;
+        }
     }
 
     @Override
@@ -105,6 +114,8 @@ public class ConnectorComponent extends GameComponent implements Connectable
     @Override
     public void transmit(int signal, long packetId, ConnectorComponent source)
     {
+        if(!active)
+            return;
         if(logicComponent!=null)
         {
             logicComponent.onTransmit(signal,packetId,source);
@@ -183,5 +194,15 @@ public class ConnectorComponent extends GameComponent implements Connectable
     public boolean isActive()
     {
         return signal!=0;
+    }
+    public boolean removeConnection(ConnectorComponent connector)
+    {
+        for (int i = 0; i < connections.length; i++)
+            if(connector == connections[i])
+            {
+                connections[i] = null;
+                return true;
+            }
+        return false;
     }
 }

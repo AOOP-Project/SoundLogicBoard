@@ -10,6 +10,8 @@ import evhh.model.ObjectPrefab;
 import evhh.model.mapeditor.MapEditor;
 import evhh.prefabs.CablePrefab;
 import evhh.prefabs.ClockPrefab;
+import evhh.prefabs.SlelectableSoundPlayerPrefab;
+import evhh.prefabs.SoundPlayerPrefab;
 import evhh.prefabs.logiccomponentsprefabs.AndGatePrefab;
 import evhh.prefabs.logiccomponentsprefabs.BoolLogicGatePrefab;
 import evhh.prefabs.logiccomponentsprefabs.NotGatePrefab;
@@ -64,6 +66,8 @@ public class Main
     private static AndGatePrefab andPrefab;
     private static OrGatePrefab orPrefab;
     private static BoolLogicGatePrefab xorPrefab;
+    private static SoundPlayerPrefab soundPlayerPrefab;
+    private static SlelectableSoundPlayerPrefab slelectableSoundPlayerPrefab;
 
     public static void main(String[] args)
     {
@@ -177,6 +181,19 @@ public class Main
                 "XorActive",
                 120,BoolLogicComponent.XOR);
 
+        File[] audioFiles = new File[1];
+        audioFiles[0] =new File(ASSET_PATH+"/AudioAssets/step.wav");
+        soundPlayerPrefab = new SoundPlayerPrefab(game1.getTexture("SpeakerInactive"),
+                "SpeakerInactive",
+                game1.getTexture("SpeakerActive"),
+                "SpeakerActive",
+                120,audioFiles,audioListener);
+        slelectableSoundPlayerPrefab = new SlelectableSoundPlayerPrefab(game1.getTexture("SpeakerInactive"),
+                "SpeakerInactive",
+                game1.getTexture("SpeakerActive"),
+                "SpeakerActive",
+                120,audioListener);
+
 
         mapEditor = new MapEditor(grid,DEFAULT_CELL_SIZE,new ObjectPrefab[]{
                 fourWayCablePrefab,
@@ -187,7 +204,9 @@ public class Main
                 notPrefab,
                 andPrefab,
                 orPrefab,
-                xorPrefab
+                xorPrefab,
+                soundPlayerPrefab,
+                slelectableSoundPlayerPrefab
         });
     }
 }
